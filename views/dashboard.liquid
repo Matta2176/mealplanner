@@ -1,0 +1,88 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title }}</title>
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <script src="/scripts/script.js" defer></script>
+</head>
+
+{% block content %}
+<div class="dashboard-container">
+    <header class="dashboard-header">
+        <h1>Welkom terug, {{ name }}!</h1>
+        <a href="/logout" class="logout-button">Uitloggen</a>
+    </header>
+
+    <section class="meal-overview">
+        <h2>Jouw Maaltijdplanning</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Dag</th>
+                    <th>Maaltijd</th>
+                    <th>Acties</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for meal in meals %}
+                <tr>
+                    <td>{{ meal.day }}</td>
+                    <td>{{ meal.name }}</td>
+                    <td>
+                        <button onclick="openEditMealPopup({{ meal.id }}, '{{ meal.name }}', {{ meal.calories }}, '{{ meal.day }}')" class="edit-btn">Bewerken</button>
+                        <a href="/delete-meal/{{ meal.id }}" class="delete-btn">Verwijderen</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <section class="add-meal">
+        <h2>Voeg een nieuwe maaltijd toe</h2>
+        <form action="/add-meal" method="POST">
+            <label for="meal_name">Maaltijd Naam:</label>
+            <input type="text" id="meal_name" name="meal_name" required>
+
+            <label for="calories">Calorieën:</label>
+            <input type="number" id="calories" name="calories" required>
+
+            <label for="day">Dag:</label>
+            <select id="day" name="day" required>
+                <option value="Maandag">Maandag</option>
+                <option value="Dinsdag">Dinsdag</option>
+                <option value="Woensdag">Woensdag</option>
+                <option value="Donderdag">Donderdag</option>
+                <option value="Vrijdag">Vrijdag</option>
+                <option value="Zaterdag">Zaterdag</option>
+                <option value="Zondag">Zondag</option>
+            </select>
+
+            <button type="submit">Toevoegen</button>
+        </form>
+
+    </section>
+</div>
+
+<!-- Popup voor bewerken maaltijd -->
+<div id="editMealPopup" class="popup-overlay">
+    <div class="popup">
+        <h2>Maaltijd Bewerken</h2>
+        <form id="editMealForm">
+            <input type="hidden" id="meal_id" name="meal_id">
+            <label>Maaltijd Naam:</label>
+            <input type="text" id="edit_meal_name" name="meal_name" required>
+            <label>Calorieën:</label>
+            <input type="number" id="edit_calories" name="calories" required>
+            <label>Dag:</label>
+            <input type="text" id="edit_day" name="day" required>
+            <div class="popup-buttons">
+                <button type="submit" class="save-btn">Opslaan</button>
+                <button type="button" class="cancel-btn" onclick="closePopup()">Annuleren</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}
