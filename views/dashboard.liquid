@@ -1,9 +1,10 @@
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ title }}</title>
-  <link rel="stylesheet" href="/css/dashboard.css">
-  <script src="/scripts/script.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <script src="/scripts/script.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 {% block content %}
@@ -13,42 +14,78 @@
         <a href="/logout" class="logout-button">Uitloggen</a>
     </header>
 
-    <section class="meal-overview">
+    <section class="meal-agenda">
         <h2>Jouw Maaltijdplanning</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Dag</th>
-                    <th>Maaltijd</th>
-                    <th>Acties</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for meal in meals %}
-                <tr>
-                    <td>{{ meal.day }}</td>
-                    <td>{{ meal.name }}</td>
-                    <td>
-                        <button onclick="openEditMealPopup({{ meal.id }}, '{{ meal.name }}', {{ meal.calories }}, '{{ meal.day }}')" class="edit-btn">Bewerken</button>
-                        <a href="/delete-meal/{{ meal.id }}" class="delete-btn">Verwijderen</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <ul class="meal-list" id="meal-list">
+            {% assign shown_dates = "" %}
+
+            {% for meal in meals %}
+                {% unless shown_dates contains meal.date %}
+                    <li class="day-header">{{ meal.date | date: "%A - %d %B" }}</li>
+                    {% assign shown_dates = shown_dates | append: meal.date | append: "," %}
+                {% endunless %}
+
+                <li class="meal-item" data-day="{{ meal.date }}">
+                    <span>{{ meal.name }} ({{ meal.calories }} kcal)</span>
+                    <div class="meal-actions">
+                        <a href="#" class="edit-btn"
+                            onclick="openEditMealPopup({{ meal.id }}, '{{ meal.name }}', {{ meal.calories }}, '{{ meal.date }}')">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="/delete-meal/{{ meal.id }}" class="delete-btn">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <button id="showAllMeals" onclick="toggleExtraDays()">Toon alle dagen</button>
     </section>
+</div>
 
-    <section class="add-meal">
-        <h2>Voeg een nieuwe maaltijd toe</h2>
-        <form action="/add-meal" method="POST">
-            <label for="meal_name">Maaltijd Naam:</label>
-            <input type="text" id="meal_name" name="meal_name" required>
+<section class="add-meal">
+    <h2>Voeg een nieuwe maaltijd toe</h2>
+    <form action="/add-meal" method="POST" onsubmit="convertDayToDate(event)">
+        <label for="meal_name">Maaltijd Naam:</label>
+        <input type="text" id="meal_name" name="meal_name" required>
 
-            <label for="calories">Calorieën:</label>
-            <input type="number" id="calories" name="calories" required>
+        <label for="calories">Calorieën:</label>
+        <input type="number" id="calories" name="calories" required>
 
-            <label for="day">Dag:</label>
-            <select id="day" name="day" required>
+        <label for="day">Dag:</label>
+        <select id="day" name="day" required>
+            <option value="Maandag">Maandag</option>
+            <option value="Dinsdag">Dinsdag</option>
+            <option value="Woensdag">Woensdag</option>
+            <option value="Donderdag">Donderdag</option>
+            <option value="Vrijdag">Vrijdag</option>
+            <option value="Zaterdag">Zaterdag</option>
+            <option value="Zondag">Zondag</option>
+        </select>
+
+        <!-- Verborgen veld voor de uiteindelijke datum -->
+        <input type="hidden" id="date" name="date">
+
+        <button type="submit">Toevoegen</button>
+    </form>
+</section>
+
+<!-- Edit Meal Popup -->
+<div class="popup-overlay" id="editMealPopup">
+    <div class="popup">
+        <button class="close-btn" onclick="closePopup()">×</button>
+        <h3>Wijzig Maaltijd</h3>
+        <form id="editMealForm">
+            <input type="hidden" id="meal_id">
+            
+            <label for="edit_meal_name">Maaltijd Naam:</label>
+            <input type="text" id="edit_meal_name" name="meal_name" required>
+
+            <label for="edit_calories">Calorieën:</label>
+            <input type="number" id="edit_calories" name="calories" required>
+
+            <label for="edit_day">Dag:</label>
+            <select id="edit_day" name="day" required>
                 <option value="Maandag">Maandag</option>
                 <option value="Dinsdag">Dinsdag</option>
                 <option value="Woensdag">Woensdag</option>
@@ -58,31 +95,11 @@
                 <option value="Zondag">Zondag</option>
             </select>
 
-            <button type="submit">Toevoegen</button>
-        </form>
-
-    </section>
-</div>
-
-<!-- Popup voor bewerken maaltijd -->
-<div id="editMealPopup" class="popup-overlay">
-    <div class="popup">
-        <h2>Maaltijd Bewerken</h2>
-        <form id="editMealForm">
-            <input type="hidden" id="meal_id" name="meal_id">
-            <label>Maaltijd Naam:</label>
-            <input type="text" id="edit_meal_name" name="meal_name" required>
-            <label>Calorieën:</label>
-            <input type="number" id="edit_calories" name="calories" required>
-            <label>Dag:</label>
-            <input type="text" id="edit_day" name="day" required>
-            <div class="popup-buttons">
-                <button type="submit" class="save-btn">Opslaan</button>
-                <button type="button" class="cancel-btn" onclick="closePopup()">Annuleren</button>
-            </div>
+            <button type="submit">Opslaan</button>
         </form>
     </div>
 </div>
 
 
+{% include 'partials/footer.liquid' %}
 {% endblock %}

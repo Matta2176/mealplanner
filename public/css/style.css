@@ -1,148 +1,86 @@
-/* Reset standaardmarges en paddings */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, sans-serif;
 }
 
-/* Algemene layout */
 body {
-  background-color: #f8f9fa;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
   color: #333;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  padding: 10px;
 }
 
-/* Dashboard container */
-.dashboard-container {
-  width: 100%;
-  max-width: 600px; /* Voor mobiel eerst, later aanpassen voor grotere schermen */
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.container {
+  width: 80%;
+  margin: 0 auto;
 }
 
-/* Header */
-.dashboard-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+header {
+  background-color: #2d3e50;
+  padding: 20px 0;
 }
 
-.logout-button {
-  background-color: #dc3545;
+header .logo {
+  height: 50px;
+}
+
+header nav {
+  float: right;
+}
+
+header nav a {
   color: white;
-  padding: 8px 15px;
-  border: none;
-  border-radius: 5px;
   text-decoration: none;
-  font-size: 14px;
+  margin-left: 20px;
 }
 
-/* Maaltijd overzicht */
-.meal-overview table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
-
-.meal-overview th, .meal-overview td {
-  border: 1px solid #ddd;
-  padding: 10px;
-  text-align: left;
-}
-
-.meal-overview th {
-  background-color: #007bff;
+.hero {
+  background-color: #ff7f50;
   color: white;
+  padding: 80px 0;
+  text-align: center;
 }
 
-/* Knoppen */
-.edit-btn, .delete-btn {
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
+.hero h1 {
+  font-size: 2.5rem;
+}
+
+.cta-button {
+  display: inline-block;
+  background-color: #32cd32;
+  color: white;
+  padding: 15px 30px;
   text-decoration: none;
-  font-size: 12px;
-  color: white;
-}
-
-.edit-btn { background-color: #ffc107; }
-.delete-btn { background-color: #dc3545; }
-
-/* Formulier voor maaltijden */
-.add-meal form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.add-meal input, .add-meal button {
-  padding: 10px;
+  font-size: 1rem;
   border-radius: 5px;
-  border: 1px solid #ccc;
+  margin-top: 20px;
 }
 
-.add-meal button {
-  background-color: #28a745;
+.features {
+  padding: 40px 0;
+  text-align: center;
+  background-color: #fff;
+}
+
+.features .feature-item {
+  margin-bottom: 30px;
+}
+
+.features .feature-item h3 {
+  font-size: 1.5rem;
+}
+
+.cta {
+  background-color: #32cd32;
   color: white;
-  border: none;
-  cursor: pointer;
+  padding: 60px 0;
+  text-align: center;
 }
 
-/* Popup Styling */
-#popupOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  display: none;
-  justify-content: center;
-  align-items: center;
-}
-
-#popupOverlay.show {
-  display: flex;
-}
-
-#editMealPopup {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-  width: 90%;
-  max-width: 400px;
-}
-
-/* Sluitknop */
-.close-btn {
-  background: red;
+footer {
+  background-color: #333;
   color: white;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-/* Responsive voor grotere schermen */
-@media (min-width: 768px) {
-  .dashboard-container {
-      max-width: 800px;
-  }
-
-  .meal-overview th, .meal-overview td {
-      font-size: 16px;
-  }
-
-  .edit-btn, .delete-btn {
-      font-size: 14px;
-  }
+  text-align: center;
+  padding: 10px;
+  margin-top: 40px;
 }

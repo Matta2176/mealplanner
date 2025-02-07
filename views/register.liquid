@@ -46,7 +46,12 @@
         </div>
       {% endif %}
 
-      <p>Heb je al een account? <a href="/login">Inloggen</a></p>
+      {% if successMessage %}
+        <p class="success">{{ successMessage | safe }}</p>
+    {% else %}
+        <p>Heb je al een account? <a href="/login">Inloggen</a></p>
+    {% endif %}
+
     </div>
   </section>
 
